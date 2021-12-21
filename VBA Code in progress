@@ -1,0 +1,72 @@
+Sub StockData():
+ 'Loop through worksheets
+ For Each ws In Worksheets
+
+    Dim Ticker As String
+    Dim StartValue As Double
+    Dim FinalValue As Double
+    Dim YearlyChange As Double
+    Dim PercentChange As Double
+    Dim TotalVolume As LongLong
+    
+    TotalVolume = 0
+    StartValue = ws.Cells(2, 3).Value
+ 
+    'Add in labels for summary table
+    ws.Cells(1, 10).Value = "Ticker"
+    ws.Cells(1, 11).Value = "Yearly Change"
+    ws.Cells(1, 12).Value = "Percent Change"
+    ws.Cells(1, 13).Value = "Total Stock Volume"
+ 
+    'Variables for Summmary Table
+    Dim SummaryTableRow As Integer
+    SummaryTableRow = 2
+ 
+    lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+ 
+ 'Loop through Ticker data and find where the ticker changes - use lastrow as end point
+    For i = 2 To lastrow
+    'Conditional for ticker change - if same, increase total stock value
+        If ws.Cells(i + 1, 1).Value = ws.Cells(i, 1).Value Then
+         TotalVolume = TotalVolume + ws.Cells(i, 7).Value
+         
+        'Else wrap up summary information
+        Else
+         Ticker = ws.Cells(i, 1).Value
+         FinalValue = ws.Cells(i, 6).Value
+         TotalVolume = TotalVolume + ws.Cells(i, 7).Value
+         YearlyChange = FinalValue - StartValue
+          
+          'Conditional to prevent dividing by zero
+          If StartValue = 0 Then
+            PercentChange = 0
+          Else
+            PercentChange = (YearlyChange / StartValue)
+          End If
+         
+         'Put information into summary table and format
+         ws.Range("J" & SummaryTableRow).Value = Ticker
+         ws.Range("M" & SummaryTableRow).Value = TotalVolume
+         ws.Range("K" & SummaryTableRow).Value = YearlyChange
+         ws.Range("L" & SummaryTableRow).Value = PercentChange
+         ws.Range("L" & SummaryTableRow).NumberFormat = "0.00%"
+         
+         'Conditional Formatting Percent Change
+           If PercentChange > 0 Then
+            ws.Range("L" & SummaryTableRow).Interior.ColorIndex = 4
+           Else
+            ws.Range("L" & SummaryTableRow).Interior.ColorIndex = 3
+           End If
+            
+         'Reset/update variables
+         SummaryTableRow = SummaryTableRow + 1
+         TotalVolume = 0
+         StartValue = ws.Cells(i + 1, 3).Value
+         
+        End If
+        
+     Next i
+     
+ Next ws
+
+End Sub
