@@ -52,10 +52,10 @@ Sub StockData():
          ws.Range("L" & SummaryTableRow).NumberFormat = "0.00%"
          
          'Conditional Formatting Percent Change
-           If PercentChange > 0 Then
-            ws.Range("L" & SummaryTableRow).Interior.ColorIndex = 4
+           If YearlyChange > 0 Then
+            ws.Range("K" & SummaryTableRow).Interior.ColorIndex = 4
            Else
-            ws.Range("L" & SummaryTableRow).Interior.ColorIndex = 3
+            ws.Range("K" & SummaryTableRow).Interior.ColorIndex = 3
            End If
             
          'Reset/update variables
@@ -66,7 +66,7 @@ Sub StockData():
         End If
         
      Next i
-     
+
  Next ws
 
 End Sub
