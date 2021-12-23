@@ -1,3 +1,4 @@
+
 Sub StockData():
  'Loop through worksheets
  For Each ws In Worksheets
@@ -89,13 +90,13 @@ Sub StockData():
      
      For i = 2 To lastrow
        'Conditional to find greatest values - Google formula?
-       If ws.Cells(i, 12).Value > ws.Cells(i + 1, 12).Value And ws.Cells(i, 12).Value > 0 Then
+       If ws.Cells(i, 12).Value > 0 And ws.Cells(i, 12).Value > ws.Cells(i + 1, 12).Value And ws.Cells(i, 12).Value > GreatestIncreaseValue Then
         GreatestIncreaseValue = ws.Cells(i, 12).Value
         GreatestIncreaseTicker = ws.Cells(i, 10).Value
-       ElseIf ws.Cells(i, 12).Value < 0 And ws.Cells(i, 12).Value < ws.Cells(i + 1, 12).Value Then
+       ElseIf ws.Cells(i, 12).Value < 0 And ws.Cells(i, 12).Value < ws.Cells(i + 1, 12).Value And ws.Cells(i, 12).Value < GreatestDecreaseValue Then
         GreatestDecreaseValue = ws.Cells(i, 12).Value
         GreatestDecreaseTicker = ws.Cells(i, 10).Value
-       ElseIf ws.Cells(i, 13).Value > ws.Cells(i + 1, 13).Value Then
+       ElseIf ws.Cells(i, 13).Value > ws.Cells(i + 1, 13).Value And ws.Cells(i, 13).Value > GreatestTotalVolume Then
         GreatestVolumeValue = ws.Cells(i, 13).Value
         GreatestVolumeTicker = ws.Cells(i, 10).Value
         
