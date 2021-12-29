@@ -17,6 +17,7 @@ Sub StockData():
     ws.Cells(1, 11).Value = "Yearly Change"
     ws.Cells(1, 12).Value = "Percent Change"
     ws.Cells(1, 13).Value = "Total Stock Volume"
+    ws.Columns("J:M").AutoFit
  
     'Variables for Summmary Table
     Dim SummaryTableRow As Integer
@@ -63,7 +64,7 @@ Sub StockData():
          TotalVolume = 0
          StartValue = ws.Cells(i + 1, 3).Value
          
-        End If
+                End If
         
      Next i
      
@@ -77,6 +78,10 @@ Sub StockData():
      Dim GreatestDecreaseTicker As String
      Dim GreatestVolumeTicker As String
      
+     GreatestIncreaseValue = 0
+     GreatestDecreaseValue = 0
+     GreatestVolumeValue = 0
+     
      
      'Labels for Greatest summary table
      ws.Cells(2, 15).Value = "Greatest % Increase"
@@ -84,35 +89,51 @@ Sub StockData():
      ws.Cells(4, 15).Value = "Greatest Total Volume"
      ws.Cells(1, 16).Value = "Ticker"
      ws.Cells(1, 17).Value = "Value"
+     ws.Columns("O:Q").AutoFit
      
      lastrow = ws.Cells(Rows.Count, 10).End(xlUp).Row
      
+     
+     'Loops to find Greatest increase, decrease, and Total Volume
      For i = 2 To lastrow
      
-     'Conditional to find greatest values
-       If ws.Cells(i, 12).Value > 0 And ws.Cells(i, 12).Value > ws.Cells(i + 1, 12).Value And ws.Cells(i, 12).Value > GreatestIncreaseValue Then
+       If GreatestIncreaseValue < ws.Cells(i, 12).Value Then
         GreatestIncreaseValue = ws.Cells(i, 12).Value
         GreatestIncreaseTicker = ws.Cells(i, 10).Value
-       ElseIf ws.Cells(i, 12).Value < 0 And ws.Cells(i, 12).Value < ws.Cells(i + 1, 12).Value And ws.Cells(i, 12).Value < GreatestDecreaseValue Then
+       End If
+       
+       'Put info into Greatest summary table
+       ws.Cells(2, 16).Value = GreatestIncreaseTicker
+       ws.Cells(2, 17).Value = GreatestIncreaseValue
+       ws.Cells(2, 17).NumberFormat = "0.00%"
+       
+       Next i
+       
+     For i = 2 To lastrow
+       If GreatestDecreaseValue > ws.Cells(i, 12).Value Then
         GreatestDecreaseValue = ws.Cells(i, 12).Value
         GreatestDecreaseTicker = ws.Cells(i, 10).Value
        End If
+       
+       'Put info into Greatest summary table
+       ws.Cells(3, 16).Value = GreatestDecreaseTicker
+       ws.Cells(3, 17).Value = GreatestDecreaseValue
+       ws.Cells(3, 17).NumberFormat = "0.00%"
+        
+       Next i
+       
+     For i = 2 To lastrow
     
       'Conditional for Greatest Total Volume
-       If ws.Cells(i, 13).Value > ws.Cells(i + 1, 13).Value And ws.Cells(i, 13).Value > GreatestVolumeValue Then
+       If ws.Cells(i, 13).Value > GreatestVolumeValue Then
         GreatestVolumeValue = ws.Cells(i, 13).Value
         GreatestVolumeTicker = ws.Cells(i, 10).Value
          
        'Put info into Greatest summary table
-        ws.Cells(2, 16).Value = GreatestIncreaseTicker
-        ws.Cells(2, 17).Value = GreatestIncreaseValue
-        ws.Cells(3, 16).Value = GreatestDecreaseTicker
-        ws.Cells(3, 17).Value = GreatestDecreaseValue
         ws.Cells(4, 16).Value = GreatestVolumeTicker
         ws.Cells(4, 17).Value = GreatestVolumeValue
-     
        End If
-       
+        
      Next i
 
  Next ws
